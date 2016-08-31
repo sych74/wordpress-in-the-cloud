@@ -23,10 +23,10 @@ ST     |  Shared Storage |           1                    |           1/8       
 * DB - Database
 * ST - Shared Storage
 
-**Wordpress Version**: 2.0.4<br/>
+**Wordpress Version**: 4.6<br/>
 **Nginx Version**: 1.8.0<br/>
 **Php Version**: PHP 5.6.20<br/>
-**MySQL Database**: 5.6.31<br/>
+**MySQL Database**: 5.7.14<br/>
 
 ### Additional functionality:
 * MySQL databases with configured asynchronous master-master replication;
