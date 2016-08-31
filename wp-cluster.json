@@ -1,0 +1,147 @@
+{
+  "jpsType": "install",
+  "jpsVersion": "0.8",
+  "application": {
+    "logo": "https://download.jelastic.com/public.php?service=files&t=3da2215839f82aa50d3d961271cd1cb9&download",
+    "name": "Wordpress Cluster",
+    "homepage": "https://wordpress.org//",
+    "description": {
+      "en": "Get your highly available and scalable clustered solution for WordPress, the extremely popular open source CMS and blogging tool. This package is designed to ensure the load tracking and distribution, as well as automatic adjusting the amount of allocated resources according to it.",
+      "ru": "Оцените преимущества работы с новым доступным и масштабируемым кластерным решением для WordPress, популярнейшего инструмента для бесплатного CMS и создания блога. Этот пакет предназначен для отслеживания и распределения загрузки, а также для автоматического регулирования количества выделенных ресурсов согласно загрузк"
+    },
+    "env": {
+      "topology": {
+        "nodes": [
+          {
+            "cloudlets": 16,
+            "count": 2,
+            "nodeType": "docker",
+            "nodeGroup": "cp",
+            "docker": {
+              "image": "sych74/wp-nginxphp",
+              "links": "sqldb:db",
+              "volumes": ["/var/www/webroot/ROOT"],
+              "volumeMounts": {
+                "/var/www/webroot/ROOT": {
+                  "readOnly": false,
+                  "sourcePath": "/data",
+                  "sourceNodeGroup": "storage"
+                }
+              }
+            },
+            "displayName": "AppServer"
+          }, {
+            "cloudlets": 8,
+            "nodeGroup": "storage",
+            "nodeType": "docker",
+            "docker": {
+              "image": "jelastic/storage"
+            },
+            "displayName": "Storage"
+          }, {
+            "cloudlets": 8,
+            "count": 2,
+            "nodeType": "docker",
+            "nodeGroup": "sqldb",
+            "docker": {
+              "image": "sych74/wp-db",
+              "env": {
+                "MYSQL_ROOT_PASSWORD": "mysql_root_password",
+                "MYSQL_PASSWORD": "wordpress_password"
+              }
+            },
+            "displayName": "Database"
+          },
+          {
+            "extip": true,
+            "cloudlets": 8,
+            "count": 2,
+            "nodeType": "docker",
+            "nodeGroup": "bl",
+            "docker": {
+              "image": "sych74/wp-nginxlb"
+            },
+            "displayName": "Load balancer"
+          }
+        ]
+      },
+      "onAfterScaleIn[nodeGroup:cp]": {
+        "call": "ScaleNodes"
+      },
+      "onAfterScaleOut[nodeGroup:cp]": {
+        "call": "ScaleNodes"
+      },
+      "onInit": {
+        "call": [ "configureDBReplication","setupWP", "ScaleNodes", "enableAutoScaling" ]
+      }
+    },
+    "success": "admin name: admin<br>admin password: ${user.appPassword}",
+    "procedures": [
+      {
+        "id": "configureDBReplication",
+        "onCall": [
+          {
+            "execCmd": [
+              {
+                "nodeId": "${nodes.sqldb[0].id}",
+                "commands": [
+                  "bash /root/setReplica.sh ${nodes.sqldb[1].address} 1"
+                ]
+              },
+              {
+                "nodeId": "${nodes.sqldb[1].id}",
+                "commands": [
+                  "bash /root/setReplica.sh ${nodes.sqldb[0].address} 2"
+                ]
+              }
+            ]
+          }
+        ]
+      },{
+        "id": "setupWP",
+        "onCall": [
+          {
+            "execCmd": [
+              {
+                "nodeId": "${nodes.cp[0].id}",
+                "commands": [ "bash /setupWP.sh \"${env.url}\"" ]
+              }
+            ]
+          }
+        ]
+      },{
+        "id": "enableAutoScaling",
+        "onCall": [{
+          "executeScript": [{
+            "description": "Enable AutoScaling trigger",
+            "type": "javascript",
+            "script": "https://download.jelastic.com/public.php?service=files&t=a0ff8d4ba0415cd9972b43ebc5fd14d0&download"
+          }
+          ]
+        }
+        ]
+      },{
+        "id": "ScaleNodes",
+        "onCall": [{
+          "execCmd": [{
+            "commands": ["echo \"\" > /etc/nginx/upstreams/common"],
+            "nodeGroup": "bl"
+          }]
+        }, {
+          "forEach(node:nodes.cp)": {
+            "execCmd": {
+              "commands": ["echo \"${@node.intIP}\" >> /etc/nginx/upstreams/common"],
+              "nodeGroup": "bl"
+            }
+          }
+        }, {
+          "execCmd": {
+            "commands": ["jem balancer rebuildCommon", "/etc/init.d/nginx reload"],
+            "nodeGroup": "bl"
+          }
+        }
+        ]
+      }
+    ]
+  }
+}
