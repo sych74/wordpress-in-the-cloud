@@ -1,19 +1,15 @@
 {
   "jpsType": "install",
-  "jpsVersion": "0.8",
   "application": {
     "logo": "https://download.jelastic.com/public.php?service=files&t=3da2215839f82aa50d3d961271cd1cb9&download",
     "name": "Wordpress Cluster",
     "homepage": "https://wordpress.org//",
-    "description": {
-      "en": "Get your highly available and scalable clustered solution for WordPress, the extremely popular open source CMS and blogging tool. This package is designed to ensure the load tracking and distribution, as well as automatic adjusting the amount of allocated resources according to it.",
-      "ru": "Оцените преимущества работы с новым доступным и масштабируемым кластерным решением для WordPress, популярнейшего инструмента для бесплатного CMS и создания блога. Этот пакет предназначен для отслеживания и распределения загрузки, а также для автоматического регулирования количества выделенных ресурсов согласно загрузк"
-    },
+    "description": "Get your highly available and scalable clustered solution for WordPress, the extremely popular open source CMS and blogging tool. This package is designed to ensure the load tracking and distribution, as well as automatic adjusting the amount of allocated resources according to it.",
     "env": {
       "topology": {
         "nodes": [
           {
-            "cloudlets": 16,
+            "cloudlets": 8,
             "count": 2,
             "nodeType": "docker",
             "nodeGroup": "cp",
@@ -45,10 +41,6 @@
             "nodeGroup": "sqldb",
             "docker": {
               "image": "sych74/wp-db",
-              "env": {
-                "MYSQL_ROOT_PASSWORD": "mysql_root_password",
-                "MYSQL_PASSWORD": "wordpress_password"
-              }
             },
             "displayName": "Database"
           },
@@ -75,8 +67,7 @@
         "call": [ "configureDBReplication","setupWP", "ScaleNodes", "enableAutoScaling" ]
       }
     },
-    "success": "admin name: admin<br>admin password: ${user.appPassword}",
-    "procedures": [
+    "success": "Below you will find your admin panel link, username and password.<\/br><\/br> <table style='font-size:13px; border: none;'><tr><td>Admin panel URL:<\/td><td style='padding-left: 10px;'><a href='${env.protocol}://${env.domain}/admin/' target='_blank'>${env.protocol}://${env.domain}/wp-login.php<\/a><\/td><\/tr> <tr><td>Admin name:<\/td><td style='padding-left: 10px;'>admin<\/td><\/tr><tr><td>Password:<\/td><td style='padding-left: 10px;'>${user.appPassword}<\/td><\/tr><\/table><\/br>To add custom domain name for your Wordpress Cluster installation follow the steps described in our <a href='http://docs.jelastic.com/custom-domains' target='_blank'>documentation<\/a>",    "procedures": [
       {
         "id": "configureDBReplication",
         "onCall": [
@@ -104,7 +95,7 @@
             "execCmd": [
               {
                 "nodeId": "${nodes.cp[0].id}",
-                "commands": [ "bash /setupWP.sh \"${env.url}\"" ]
+                "commands": [ "bash /setupWP.sh \"${user.email}\" \"${user.appPassword}\" \"${env.url}\" " ]
               }
             ]
           }
