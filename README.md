@@ -1,6 +1,6 @@
 # Highly Available and Auto-scalable Wordpress Cluster
 
-[![Deploy](https://github.com/jelastic-jps/git-push-deploy/raw/master/images/deploy-to-jelastic.png)](https://jelastic.com/install-application/?manifest=https%3A%2F%2Fgithub.com%2Fjelastic-jps%2Fmagento-cluster%2Fraw%2Fmaster%2Fmanifest.jps) 
+[![Deploy](https://github.com/jelastic-jps/git-push-deploy/raw/master/images/deploy-to-jelastic.png)](https://jelastic.com/install-application/?manifest=https://raw.githubusercontent.com/sych74/wordpress-in-the-cloud/master/manifest.jps) 
 
 The JPS package deploy Wordpress that initially contains 2 balancers, 2 application servers, 2 MySQL databases and 1 storage container.
 
@@ -40,7 +40,7 @@ ST     |  Shared Storage |           1                    |           1/8       
 
 In order to get this solution instantly deployed, click the "Deploy" button, specify your email address within the widget, choose one of the [Jelastic Public Cloud providers](https://jelastic.cloud) and press Install.
 
-[![Deploy](https://github.com/jelastic-jps/git-push-deploy/raw/master/images/deploy-to-jelastic.png)](https://jelastic.com/install-application/?manifest=https%3A%2F%2Fgithub.com%2Fjelastic-jps%2Fmagento-cluster%2Fraw%2Fmaster%2Fmanifest.jps) 
+[![Deploy](https://github.com/jelastic-jps/git-push-deploy/raw/master/images/deploy-to-jelastic.png)](https://jelastic.com/install-application/?manifest=https://raw.githubusercontent.com/sych74/wordpress-in-the-cloud/master/manifest.jps) 
 
 ### Private Cloud 
 To deploy this package to Jelastic Private Cloud, import [this JPS manifest](../../raw/master/manifest.jps) within your dashboard ([detailed instruction](https://docs.jelastic.com/environment-export-import#import)).
