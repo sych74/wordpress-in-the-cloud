@@ -13,31 +13,24 @@ Get your highly available and scalable clustered solution for Wordpress, the ext
 ###Specifics
  Layer | Server          | Number of CTs <br/> by default | Cloudlets per CT <br/> (reserved/dynamic) | Options
 -------|-----------------| :-----------------------------:|:-----------------------------------------:|:-----:
-LB     | Varnish(+Nginx 443 port)|           2                    |          1/8                               |   -
-AS     | Nginx (PHP-FPM) |            2                   |         1/8                                |  -
-DB     |      MySQL      |          2                     |          1/8                               |  -
-CH     |     Memcached   |           2                    |         1/8                                |-
-ST     |  Shared Storage |          1                     |           1/8                              |   -
+LB     |      Nginx      |           2                    |           1/8                             |   -
+AS     | Nginx (PHP-FPM) |           2                    |           1/8                             |   -
+DB     |      MySQL      |           2                    |           1/8                             |   -
+ST     |  Shared Storage |           1                    |           1/8                             |   -
 
 * LB - Load balancer
 * AS - Application server
 * DB - Database
-* CH - Cache
 * ST - Shared Storage
-* CT - Container
 
-**Magento Version**: 2.0.4<br/>
-**Varnish Version**: 4.1.1<br/>
+**Wordpress Version**: 2.0.4<br/>
 **Nginx Version**: 1.8.0<br/>
 **Php Version**: PHP 5.6.20<br/>
 **MySQL Database**: 5.6.31<br/>
-**Memcached Version**: 1.4.15
 
 ### Additional functionality:
 * MySQL databases with configured asynchronous master-master replication;
 * horizontal scaling enabled on compute nodes by CPU load. New AppServer will be added while 70% loading;
-* failover sql connection between MySQL and CP nodes based on [mysqlnd_ms](http://php.net/manual/ru/book.mysqlnd-ms.php) plugin;
-* Memcached HA for session storage.
 
 ---
 
