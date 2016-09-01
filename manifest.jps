@@ -14,7 +14,7 @@
             "nodeType": "docker",
             "nodeGroup": "cp",
             "docker": {
-              "image": "sych74/wp-nginxphp",
+              "image": "jelastic/wp-nginxphp",
               "links": "sqldb:db",
               "volumes": ["/var/www/webroot/ROOT"],
               "volumeMounts": {
@@ -40,7 +40,7 @@
             "nodeType": "docker",
             "nodeGroup": "sqldb",
             "docker": {
-              "image": "sych74/wp-db",
+              "image": "jelastic/wp-db",
             },
             "displayName": "Database"
           },
@@ -51,7 +51,7 @@
             "nodeType": "docker",
             "nodeGroup": "bl",
             "docker": {
-              "image": "sych74/wp-nginxlb"
+              "image": "jelastic/wp-nginxlb"
             },
             "displayName": "Load balancer"
           }
